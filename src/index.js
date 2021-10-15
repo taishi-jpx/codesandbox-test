@@ -1,223 +1,93 @@
-/**
- * const, let 等の変数宣言
- *
- */
+import "./styles.css";
 
-// var val1 = "var変数";
-// console.log(val1);
-// // var変数は上書き可能
-// val1 = "var変数を上書き";
-// console.log(val1);
-// // 再宣言も可能
-// var val1 = "varを再宣言";
-// console.log(val1);
+const onClickAdd = () => {
+  // alert("test");
+  // テキストボックスの値を取得して初期化
+  const inputText = document.getElementById("add-text").value;
+  document.getElementById("add-text").value = "";
 
-// let val2 = "let変数";
-// console.log(val2);
-// letは再宣言不可能
-// let val2 = "再宣言";
+  createIncompleteList(inputText);
+};
 
-// constは上書きと再宣言不可能
-// const val3 = "const変数";
-// val3 = "変更"
+// 未完了リストから指定の要素を削除
+const deleteFromIncompleteList = (target) => {
+  // removeChildで子要素削除
+  document.getElementById("incomplete-list").removeChild(target);
+};
 
-// constで定義したオブジェクトはプロパティの変更が可能
-// const val4 = {
-//   name: "じゃけえ",
-//   age: 28
-// };
-// val4.name = "jak";
-// val4.addres = "hiroshima";
-// console.log(val4);
+// 未完了リストに追加する関する
+const createIncompleteList = (text) => {
+  // divタグ生成
+  const div = document.createElement("div");
+  div.className = "list-row";
+  // console.log(div);
 
-// 配列も中身変更が可能
-// const val5 = ["dog", "cat"];
-// val5[0] = "bird";
-// val5.push("monky");
-// console.log(val5);
+  // liタグ生成
+  const li = document.createElement("li");
+  li.innerText = text;
 
-/*
- *テンプレート文字列
- *
- */
+  // button(完了)タグ生成
+  const completeButton = document.createElement("button");
+  completeButton.innerText = "完了";
+  completeButton.addEventListener("click", () => {
+    // 完了ボタンの親タグから削除
+    deleteFromIncompleteList(completeButton.parentNode);
 
-// const name = "ねこ";
-// const age = 28;
-// // 従来の方法
-// const message1 = "私の名前は" + name + "です。年齢は" + age;
-// console.log(message1);
-// // テンプレート文字列
-// const message2 = `私の名前は${name}です。年齢は${age}です`;
-// console.log(message2);
+    // 完了リストに要素を追加
+    const addTarget = completeButton.parentNode;
+    // 第一子要素(firstElementChild)のテキスト（innerText)を取得
+    const text = addTarget.firstElementChild.innerText;
 
-/*
- *Arrow関数
- */
+    // div以下を初期化
+    addTarget.textContent = null;
 
-//  従来の関数
-// function func1(str) {
-//   return str;
-// }
-// const func1 = function (str) {
-//   return str;
-// };
-// console.log(func1("func1です"));
+    // liタグ生成
+    const li = document.createElement("li");
+    li.innerText = text;
 
-// // アロー関数（引数のカッコを削除可能、１行で処理が終わるときはreturnを省略出来る
-// const func2 = (str) => str;
-// const func2 = (str) => {
-//   return str;
-// };
-// console.log(func2("func2です"));
+    //　戻すボタンの生成
+    const backButton = document.createElement("button");
+    backButton.innerText = "戻す";
+    backButton.addEventListener("click", () => {
+      // alert("確認");
+      // 押された戻すボタンの親タグ（div)を完了リストから削除
+      const deleteTarget = backButton.parentNode;
+      document.getElementById("complete-list").removeChild(deleteTarget);
 
-// const func3 = (num1, num2) => num1 + num2;
-// const func3 = (num1, num2) => {
-//   return num1 + num2;
-// };
-// console.log(func3(10, 20));
+      // テキスト取得
+      const text = backButton.parentNode.firstElementChild.innerText;
+      createIncompleteList(text);
+    });
 
-/**
- * 分割代入
- */
+    // 子要素に設定
+    addTarget.appendChild(li);
+    addTarget.appendChild(backButton);
 
-// const myProfile = {
-//   name: "ねこ",
-//   age: 28
-// };
+    // console.log(addTarget);
 
-// const message1 = `名前は${myProfile.name}で、年齢は${myProfile.age}です。`;
-// console.log(message1);
+    // 完了リストに追加
+    // document.getElementById("complete-list").appendChild(addTarget);
+    document.getElementById("complete-list").appendChild(addTarget);
+  });
 
-// オブジェクトで先にプロパティを抜き出し可能（分割代入）
-// const { name, age } = myProfile;
-// const message2 = `名前は${name}で、年齢は${age}でい。`;
-// console.log(message2);
+  // button(削除)タグ生成
+  const deleteButton = document.createElement("button");
+  deleteButton.innerText = "削除";
+  deleteButton.addEventListener("click", () => {
+    // 押された削除ボタンの親タグ（div)を未完了リストから削除(parentNodeで親タグを取得出来る)
+    deleteFromIncompleteList(deleteButton.parentNode);
+  });
 
-// 配列も分割代入可能
-// const myProfile = ["なこ", 28];
-// const message3 = `名前は${myProfile[0]}で、年齢は${myProfile[1]}です`;
-// console.log(message3);
+  // divタグの子要素にliタグを入れる
+  div.appendChild(li);
+  div.appendChild(completeButton);
+  div.appendChild(deleteButton);
+  // console.log(div);
 
-// const [name, age] = myProfile;
-// const message4 = `名前は${name}でして、年齢は${age}なのです`;
-// console.log(message4);
+  // 未完了リストに追加
+  document.getElementById("incomplete-list").appendChild(div);
+};
 
-/**
- * デフォルト値
- */
-
-// const sayHello = (name = "初期値") => console.log(`こんにちは！${name}さん！`);
-// sayHello();
-// sayHello("neko");
-
-/**
- * スプレッド構文 ...
- */
-
-// 配列の展開
-// const arr1 = [1, 2];
-// console.log(arr1);
-// console.log(...arr1);
-
-// const sumFunc = (num1, num2) => console.log(num1 + num2);
-// sumFunc(arr1[0], arr1[1]);
-// sumFunc(...arr1);
-
-// // まとめる
-// const arr2 = [1, 2, 3, 4, 5];
-// const [num1, num2, ...arr3] = arr2;
-// console.log(arr3);
-
-// // 配列のコピーと結合
-// const arr4 = [10, 20];
-// const arr5 = [30, 40];
-
-// const arr6 = [...arr4];
-// arr6[0] = 100;
-// console.log(arr6);
-// console.log(arr4);
-// const arr7 = [...arr4, ...arr5];
-// console.log(arr7);
-
-// =で記載するともとの配列も変わってしまうので駄目
-// const arr8 = arr4;
-// console.log(arr8);
-// arr8[0] = 100;
-// console.log(arr4);
-
-/**
- * mapやfilterを使った配列処理
- */
-
-const nameArr = ["田中", "山田", "ねこ"];
-// for (let index = 0; index < nameArr.length; index++) {
-//   console.log(`${index}:${nameArr[index]}です`);
-// }
-
-// const nameArr2 = nameArr.map((name) => {
-//   return name;
-// });
-// console.log(nameArr2);
-
-// mapは第２引数に順番を取ることも出来る
-// nameArr.map((name, index) => console.log(`${index + 1}:${name}`));
-
-// filterは条件式を書いて一致するものを（そのまま）返す
-// const numArr = [1, 2, 3, 4, 5];
-// const newNumArr = numArr.filter((num) => {
-//   return num % 2 === 0;
-// })
-
-// console.log(newNumArr);
-
-// const newNameArr = nameArr.map((name) => {
-//   if (name === "ねこ") {
-//     return name
-//   } else {
-//     return `${name}さん`
-//   }
-// })
-// console.log(newNameArr);
-
-/**
- * 三項演算子
- */
-// 構文：　ある条件　？　条件がTrueのとき：　条件がfalseのとき
-// const val1 = 1 > 0 ? 'true' : 'false';
-// console.log(val1);
-
-// const num = 1300;
-// console.log(num.toLocaleString());
-
-// const formattedNum = typeof num === 'number' ? num.toLocaleString() : '数値を入力して';
-// console.log(formattedNum);
-
-// const checkSum = (num1, num2) => {
-//   return num1 + num2 > 100 ? '100を超えてる' : '許容範囲';
-// }
-// console.log(checkSum(50,90));
-
-/**
- * 論理演算子の本当の意味を知ろう && ||
- */
-
-// const flag1 = true;
-// const flag2 = true;
-
-// if (flag1 || flag2) {
-//   console.log("1か2がTrueです");
-// }
-
-// if (flag1 && flag2) {
-//   console.log("1も2もTrueです");
-// }
-
-// ||　は　左側がfalseなら右を返す
-// const num = null;
-// const fee = num || "金額未設定です";
-// console.log(fee);
-
-// &&（アンパサンド）　は左がtureなら右側を返す
-// const num2 = 100;
-// const fee2 = num2 && "何か設定されました";
-// console.log(fee2);
+document
+  .getElementById("add-button")
+  .addEventListener("click", () => onClickAdd());
